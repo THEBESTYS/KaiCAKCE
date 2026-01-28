@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import '../types';
 
 interface AuthModalProps {
   mode: 'login' | 'signup';

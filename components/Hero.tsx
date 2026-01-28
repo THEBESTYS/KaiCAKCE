@@ -1,5 +1,6 @@
 
 import React from 'react';
+import '../types';
 
 const Hero: React.FC<{ t: any }> = ({ t }) => {
   return (

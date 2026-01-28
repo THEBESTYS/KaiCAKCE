@@ -1,17 +1,17 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Language, User, Course, Reservation } from './types';
-import { translations } from './translations';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Courses from './components/Courses';
-import Magazine from './components/Magazine';
-import ReservationSection from './components/ReservationSection';
-import Locations from './components/Locations';
-import About from './components/About';
-import Footer from './components/Footer';
-import AuthModal from './components/AuthModal';
-import AdminPanel from './components/AdminPanel';
+import { translations } from './translations.ts';
+import Navbar from './components/Navbar.tsx';
+import Hero from './components/Hero.tsx';
+import Courses from './components/Courses.tsx';
+import Magazine from './components/Magazine.tsx';
+import ReservationSection from './components/ReservationSection.tsx';
+import Locations from './components/Locations.tsx';
+import About from './components/About.tsx';
+import Footer from './components/Footer.tsx';
+import AuthModal from './components/AuthModal.tsx';
+import AdminPanel from './components/AdminPanel.tsx';
 
 const MOCK_COURSES: Course[] = [
   {
@@ -99,7 +99,10 @@ const App: React.FC = () => {
 
   const handleCourseSelect = (id: string) => {
     setSelectedCourseId(id);
-    document.getElementById('reservation')?.scrollIntoView({ behavior: 'smooth' });
+    const element = document.getElementById('reservation');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (

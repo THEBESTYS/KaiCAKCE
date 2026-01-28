@@ -1,5 +1,6 @@
 
 import React from 'react';
+import '../types';
 
 const About: React.FC = () => {
   return (
