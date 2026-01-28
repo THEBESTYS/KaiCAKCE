@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Language, User, Course, Reservation } from './types';
+import React, { useState } from 'react';
+import { Language, User, Course } from './types.ts';
 import { translations } from './translations.ts';
 import Navbar from './components/Navbar.tsx';
 import Hero from './components/Hero.tsx';
@@ -61,14 +61,12 @@ const App: React.FC = () => {
   const t = translations[lang];
 
   const handleLogin = (email: string, pass: string) => {
-    // Admin login check
     if (email === 'one' && pass === 'pass1234') {
       const admin = members.find(u => u.role === 'admin') || MOCK_USERS[3];
       setCurrentUser(admin);
       setIsAuthModalOpen(false);
       return true;
     }
-    // Simple mock user login
     const user = members.find(u => u.email === email);
     if (user) {
       setCurrentUser(user);
@@ -97,8 +95,8 @@ const App: React.FC = () => {
     setIsAdminPanelOpen(false);
   };
 
-  const handleCourseSelect = (id: string) => {
-    setSelectedCourseId(id);
+  const handleCourseSelect = (title: string) => {
+    setSelectedCourseId(title);
     const element = document.getElementById('reservation');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -151,13 +149,12 @@ const App: React.FC = () => {
         />
       )}
 
-      {/* Language Switcher Floating Button */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
         <div className="group relative">
            <button className="bg-primary text-white p-4 rounded-full shadow-2xl hover:bg-primary-dark transition-all flex items-center justify-center">
              <iconify-icon icon="mdi:translate" width="28" height="28"></iconify-icon>
            </button>
-           <div className="absolute bottom-full right-0 mb-3 hidden group-hover:flex flex-col bg-white border border-zinc-200 rounded-xl shadow-xl p-2 min-w-[120px] fade-in">
+           <div className="absolute bottom-full right-0 mb-3 hidden group-hover:flex flex-col bg-white border border-zinc-200 rounded-xl shadow-xl p-2 min-w-[120px]">
               <button onClick={() => setLang('ko')} className={`px-4 py-2 text-sm text-left rounded hover:bg-zinc-50 ${lang === 'ko' ? 'text-primary font-bold' : ''}`}>한국어</button>
               <button onClick={() => setLang('en')} className={`px-4 py-2 text-sm text-left rounded hover:bg-zinc-50 ${lang === 'en' ? 'text-primary font-bold' : ''}`}>English</button>
               <button onClick={() => setLang('zh')} className={`px-4 py-2 text-sm text-left rounded hover:bg-zinc-50 ${lang === 'zh' ? 'text-primary font-bold' : ''}`}>中文</button>
