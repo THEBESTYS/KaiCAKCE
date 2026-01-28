@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Language, User } from '../types';
+import { Language, User } from '../types.ts';
 
 interface NavbarProps {
   lang: Language;
@@ -25,7 +25,16 @@ const Navbar: React.FC<NavbarProps> = ({
       setIsFullScreen(!!document.fullscreenElement);
     };
     document.addEventListener('fullscreenchange', handleFsChange);
-    return () => document.removeEventListener('fullscreenchange', handleFsChange);
+    document.addEventListener('webkitfullscreenchange', handleFsChange);
+    document.addEventListener('mozfullscreenchange', handleFsChange);
+    document.addEventListener('MSFullscreenChange', handleFsChange);
+    
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFsChange);
+      document.removeEventListener('webkitfullscreenchange', handleFsChange);
+      document.removeEventListener('mozfullscreenchange', handleFsChange);
+      document.removeEventListener('MSFullscreenChange', handleFsChange);
+    };
   }, []);
 
   const toggleFullScreen = () => {
