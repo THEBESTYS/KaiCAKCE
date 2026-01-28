@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Language, User } from '../types';
 
 interface NavbarProps {
@@ -18,6 +18,27 @@ const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  useEffect(() => {
+    const handleFsChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFsChange);
+    return () => document.removeEventListener('fullscreenchange', handleFsChange);
+  }, []);
+
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   return (
     <header className="fixed top-0 w-full z-40 glass border-b border-zinc-100">
@@ -32,7 +53,7 @@ const Navbar: React.FC<NavbarProps> = ({
             </a>
           </div>
 
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden lg:flex items-center space-x-8">
             <a href="#" className="text-sm font-medium text-zinc-700 hover:text-primary transition-all">{t.home}</a>
             <a href="#courses" className="text-sm font-medium text-zinc-700 hover:text-primary transition-all">{t.courses}</a>
             <a href="#magazine" className="text-sm font-medium text-zinc-700 hover:text-primary transition-all">{t.magazine}</a>
@@ -41,13 +62,22 @@ const Navbar: React.FC<NavbarProps> = ({
             <a href="#about" className="text-sm font-medium text-zinc-700 hover:text-primary transition-all">{t.about}</a>
           </nav>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* Full Screen Toggle Button */}
+            <button 
+              onClick={toggleFullScreen}
+              className="p-2 rounded-full text-zinc-500 hover:bg-zinc-100 hover:text-primary transition-all flex items-center justify-center"
+              title="Toggle Full Screen"
+            >
+              <iconify-icon icon={isFullScreen ? "mdi:fullscreen-exit" : "mdi:fullscreen"} width="24"></iconify-icon>
+            </button>
+
             {!currentUser ? (
               <>
-                <button onClick={onLoginClick} className="text-sm font-medium text-zinc-700 hover:text-primary hidden sm:block">
+                <button onClick={onLoginClick} className="text-sm font-medium text-zinc-700 hover:text-primary hidden sm:block px-2">
                   {t.login}
                 </button>
-                <button onClick={onSignupClick} className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-primary-dark transition-all">
+                <button onClick={onSignupClick} className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-primary-dark transition-all shadow-md">
                   {t.signup}
                 </button>
               </>
@@ -60,7 +90,7 @@ const Navbar: React.FC<NavbarProps> = ({
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
                     <iconify-icon icon="mdi:account" className="text-primary"></iconify-icon>
                   </div>
-                  <span className="text-sm font-medium">{currentUser.name}</span>
+                  <span className="text-sm font-medium hidden xs:block">{currentUser.name}</span>
                   <iconify-icon icon="mdi:chevron-down"></iconify-icon>
                 </button>
                 
@@ -87,7 +117,7 @@ const Navbar: React.FC<NavbarProps> = ({
               </div>
             )}
             
-            <button className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
+            <button className="lg:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)}>
               <iconify-icon icon={mobileOpen ? "mdi:close" : "mdi:menu"} width="24"></iconify-icon>
             </button>
           </div>
@@ -95,13 +125,19 @@ const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden bg-white border-b border-zinc-100 px-4 py-6 space-y-4">
+        <div className="lg:hidden bg-white border-b border-zinc-100 px-4 py-6 space-y-4 animate-in fade-in slide-in-from-top-4 duration-200">
           <a href="#" className="block text-lg font-medium" onClick={() => setMobileOpen(false)}>{t.home}</a>
           <a href="#courses" className="block text-lg font-medium" onClick={() => setMobileOpen(false)}>{t.courses}</a>
+          <a href="#magazine" className="block text-lg font-medium" onClick={() => setMobileOpen(false)}>{t.magazine}</a>
           <a href="#reservation" className="block text-lg font-medium" onClick={() => setMobileOpen(false)}>{t.reservation}</a>
-          <div className="pt-4 border-t border-zinc-100">
+          <a href="#locations" className="block text-lg font-medium" onClick={() => setMobileOpen(false)}>{t.locations}</a>
+          <a href="#about" className="block text-lg font-medium" onClick={() => setMobileOpen(false)}>{t.about}</a>
+          <div className="pt-4 border-t border-zinc-100 flex flex-col gap-2">
              {!currentUser && (
-               <button onClick={onLoginClick} className="w-full text-center py-3 border border-zinc-200 rounded-xl font-medium mb-2">{t.login}</button>
+               <>
+                 <button onClick={onLoginClick} className="w-full text-center py-3 border border-zinc-200 rounded-xl font-medium">{t.login}</button>
+                 <button onClick={onSignupClick} className="w-full text-center py-3 bg-primary text-white rounded-xl font-medium">{t.signup}</button>
+               </>
              )}
           </div>
         </div>
