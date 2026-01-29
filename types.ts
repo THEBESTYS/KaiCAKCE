@@ -32,9 +32,9 @@ export interface Reservation {
   status: 'active' | 'completed' | 'cancelled';
 }
 
-// Fix for 'iconify-icon' intrinsic element error in TypeScript JSX.
-// We augment the 'react' module directly to ensure we merge with standard HTML elements instead of shadowing the global JSX namespace.
-declare module 'react' {
+// Global declaration for custom elements in JSX
+// Fixed: Using 'declare global' instead of 'declare module 'react'' to avoid module resolution issues during augmentation
+declare global {
   namespace JSX {
     interface IntrinsicElements {
       'iconify-icon': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
