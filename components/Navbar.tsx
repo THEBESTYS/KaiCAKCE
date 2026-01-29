@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Language, User } from '../types.ts';
+import { Language, User } from '../types';
 
 interface NavbarProps {
   lang: Language;
