@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export type Language = 'ko' | 'en' | 'zh';
@@ -33,27 +32,10 @@ export interface Reservation {
 }
 
 // Fix for 'iconify-icon' intrinsic element error in TypeScript JSX.
-// We augment the React.JSX namespace to ensure the custom element is recognized 
-// without shadowing standard HTML elements like div, span, button, etc.
-// This approach is compatible with both React 18+ (using React.JSX) and older versions.
-declare global {
-  namespace React {
-    namespace JSX {
-      interface IntrinsicElements {
-        'iconify-icon': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
-          icon?: string;
-          width?: string | number;
-          height?: string | number;
-          flip?: string;
-          rotate?: string | number;
-          inline?: boolean;
-        }, HTMLElement>;
-      }
-    }
-  }
-  
-  // Also provide a global JSX augmentation for environments that check global scope,
-  // but we do it in a way that attempts to merge with existing definitions.
+// We augment the 'react' module's JSX namespace to ensure the custom element is recognized.
+// This avoids shadowing the global React or JSX namespaces which caused standard HTML elements 
+// (like div, span, button, etc.) to be unrecognized across the application.
+declare module 'react' {
   namespace JSX {
     interface IntrinsicElements {
       'iconify-icon': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
@@ -64,6 +46,16 @@ declare global {
         rotate?: string | number;
         inline?: boolean;
       }, HTMLElement>;
+    }
+  }
+}
+
+// Provide a minimal global JSX augmentation to ensure the custom element is recognized
+// globally without overriding existing HTML element definitions.
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'iconify-icon': any;
     }
   }
 }
